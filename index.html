@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday ARSHIYA! 🎉</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b8b;
+            --secondary: #3a86ff;
+            --accent: #ffbe0b;
+            --light: #fff5f7;
+            --dark: #2d3047;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            color: white;
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .header h2 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .birthday-person {
+            font-size: 3rem;
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            top: 0;
+            opacity: 0;
+        }
+
+        @keyframes confetti-fall {
+            0% { top: -100px; opacity: 1; }
+            100% { top: 100vh; opacity: 0; }
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Wishes Section */
+        .wishes-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+        }
+
+        .wish-form {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Wishes List */
+        .wishes-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .wish-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .wish-item:hover {
+            transform: translateX(5px);
+        }
+
+        .wish-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .wish-name {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        .wish-time {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .wish-message {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Like Button */
+        .like-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .like-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .like-btn.liked {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Birthday Stats */
+        .stats-section {
+            background: linear-gradient(135deg, var(--secondary), #5a67d8);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(58, 134, 255, 0.3);
+        }
+
+        .stats-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+        }
+
+        /* Memories Section */
+        .memories-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .photo-item {
+            border-radius: 15px;
+            overflow: hidden;
+            height: 200px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            font-size: 0.9rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover .photo-caption {
+            transform: translateY(0);
+        }
+
+        /* Countdown Timer */
+        .countdown-section {
+            background: linear-gradient(45deg, var(--primary), #ff8e9e);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(255, 107, 139, 0.3);
+        }
+
+        .countdown-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 120px;
+            backdrop-filter: blur(10px);
+        }
+
+        .countdown-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--dark);
+            color: white;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .heart {
+            color: var(--primary);
+            animation: heartbeat 1.5s infinite;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--secondary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .music-btn {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .music-btn:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        .song-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--accent); }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px var(--accent), 0 0 40px var(--accent); }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff3e6d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Music Player -->
+    <div class="music-player">
+        <div class="music-btn" id="playBtn">
+            <i class="fas fa-play"></i>
+        </div>
+        <div class="song-title">Happy Birthday Song</div>
+        <audio id="birthdaySong" loop>
+            <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Wish submitted successfully!</span>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Happy Birthday!</h1>
+            <h2>It's your special day</h2>
+            <div class="birthday-person" id="birthdayPerson">ARSHIYA!</div>
+            <div id="confettiContainer"></div>
+        </header>
+
+        <!-- Countdown Timer -->
+        <section class="countdown-section">
+            <h2 class="countdown-title">Celebration Countdown</h2>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Wishes Section -->
+            <div class="wishes-section">
+                <h2 class="section-title">Send Birthday Wishes</h2>
+                
+                <!-- Wish Form -->
+                <div class="wish-form">
+                    <form id="wishForm">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Your Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message"><i class="fas fa-comment"></i> Your Message</label>
+                            <textarea id="message" class="form-control" placeholder="Write your birthday wish here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-paper-plane"></i> Send Wish
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Wishes List -->
+                <h3 class="section-title">Recent Wishes</h3>
+                <div class="wishes-list" id="wishesList">
+                    <!-- Wishes will be loaded here dynamically -->
+                    <div class="wish-item">
+                        <div class="wish-header">
+                            <div class="wish-name">Your Friend</div>
+                            <div class="wish-time">Just now</div>
+                        </div>
+                        <div class="wish-message">
+                            Happy Birthday! May all your dreams come true. 🎂
+                        </div>
+                        <button class="like-btn">
+                            <i class="fas fa-heart"></i> <span class="like-count">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats-section">
+                <h3>Birthday Stats</h3>
+                <div class="stat-item">
+                    <div class="stat-label">Total Wishes</div>
+                    <div class="stat-value" id="totalWishes">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Likes Received</div>
+                    <div class="stat-value" id="totalLikes">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Wishers Today</div>
+                    <div class="stat-value" id="wishersToday">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Celebration Level</div>
+                    <div class="stat-value" id="celebrationLevel">🎉</div>
+                </div>
+                
+                <!-- Birthday Progress -->
+                <h3 style="margin-top: 30px;">Birthday Meter</h3>
+                <div style="background: rgba(255,255,255,0.2); height: 20px; border-radius: 10px; margin-top: 15px; overflow: hidden;">
+                    <div id="birthdayMeter" style="height: 100%; background: var(--accent); width: 0%; border-radius: 10px; transition: width 1s;"></div>
+                </div>
+                <div style="text-align: center; margin-top: 10px; font-size: 0.9rem;">
+                    <span id="meterText">Birthday excitement level</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memories Section -->
+        <section class="memories-section">
+            <h2 class="section-title">Memory Lane</h2>
+            <p>Add your favorite memories with ARSHIYA!</p>
+            
+            <div class="photo-grid" id="memoryGrid">
+                <!-- Memory photos will be added here -->
+                <div class="photo-item">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Memory 1">
+                    <div class="photo-caption">Good times together!</div>
+                </div>
+                <div class="photo-item">
+                    <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Memory 2">
+                    <div class="photo-caption">Celebration time!</div>
+                </div>
+                <div class="photo-item">
+                    <img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Memory 3">
+                    <div class="photo-caption">Fun moments!</div>
+                </div>
+            </div>
+            
+            <!-- Add Memory Form -->
+            <div style="margin-top: 30px;">
+                <h4>Add a Memory</h4>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <input type="text" id="memoryUrl" class="form-control" placeholder="Image URL">
+                    <input type="text" id="memoryCaption" class="form-control" placeholder="Caption">
+                    <button class="btn" onclick="addMemory()">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made with <span class="heart"><i class="fas fa-heart"></i></span> for <span id="footerName">ARSHIYA</span></p>
+            <p>This birthday page updates in realtime! Share with friends to add wishes.</p>
+            <p>© 2026 Birthday Celebration | All wishes are stored in Firebase</p>
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="sharePage()">
+                    <i class="fas fa-share-alt"></i> Share This Page
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // DOM Elements
+        const wishForm = document.getElementById('wishForm');
+        const wishesList = document.getElementById('wishesList');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const playBtn = document.getElementById('playBtn');
+        const birthdaySong = document.getElementById('birthdaySong');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const birthdayPerson = document.getElementById('birthdayPerson');
+        const footerName = document.getElementById('footerName');
+
+        // Stats Elements
+        const totalWishesEl = document.getElementById('totalWishes');
+        const totalLikesEl = document.getElementById('totalLikes');
+        const wishersTodayEl = document.getElementById('wishersToday');
+        const celebrationLevelEl = document.getElementById('celebrationLevel');
+        const birthdayMeter = document.getElementById('birthdayMeter');
+        const meterText = document.getElementById('meterText');
+
+        // Countdown Elements
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        // Configuration - EDITED FOR ARSHIYA
+        const BIRTHDAY_NAME = "ARSHIYA"; // Friend ka naam
+        const BIRTHDAY_DATE = "April 17, 2026 00:00:00"; // 17 April 2026 at 12:00 AM
+        const PAGE_TITLE = "Happy Birthday Meri Jaan! 🎉";
+
+        // Set page title and name
+        document.title = PAGE_TITLE;
+        birthdayPerson.textContent = BIRTHDAY_NAME;
+        footerName.textContent = BIRTHDAY_NAME;
+
+        // Initialize variables
+        let isPlaying = false;
+        let totalWishes = 0;
+        let totalLikes = 0;
+        let wishesToday = 0;
+
+        // Initialize Firebase Database References
+        const wishesRef = database.ref('birthdayWishes');
+        const statsRef = database.ref('birthdayStats');
+        const memoriesRef = database.ref('birthdayMemories');
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add('show');
+            
+            if (type === 'error') {
+                toast.style.background = '#ff4757';
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#ff6b8b', '#3a86ff', '#ffbe0b', '#06d6a0', '#ff9e00'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                
+                const animationDuration = Math.random() * 3 + 2;
+                confetti.style.animation = `confetti-fall ${animationDuration}s linear forwards`;
+                
+                confettiContainer.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, animationDuration * 1000);
+            }
+        }
+
+        // Format date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            // If less than a minute
+            if (diff < 60000) {
+                return 'Just now';
+            }
+            
+            // If less than an hour
+            if (diff < 3600000) {
+                const minutes = Math.floor(diff / 60000);
+                return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            }
+            
+            // If today
+            if (date.toDateString() === now.toDateString()) {
+                return `Today at ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            }
+            
+            // If yesterday
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return `Yesterday at ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            }
+            
+            // Otherwise
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Submit wish form
+        wishForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            if (!name || !message) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Create wish object
+            const wish = {
+                name: name,
+                message: message,
+                timestamp: Date.now(),
+                likes: 0,
+                likedBy: []
+            };
+            
+            // Push to Firebase
+            wishesRef.push(wish)
+                .then(() => {
+                    showToast('Your wish has been sent! 🎉');
+                    wishForm.reset();
+                    createConfetti();
+                    
+                    // Play celebration sound
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-happy-crowd-laugh-464.mp3');
+                    audio.volume = 0.3;
+                    audio.play();
+                })
+                .catch((error) => {
+                    console.error('Error submitting wish:', error);
+                    showToast('Error sending wish. Please try again.', 'error');
+                });
+        });
+
+        // Load wishes from Firebase
+        function loadWishes() {
+            wishesRef.on('value', (snapshot) => {
+                wishesList.innerHTML = '';
+                totalWishes = 0;
+                totalLikes = 0;
+                const today = new Date().toDateString();
+                wishesToday = 0;
+                
+                const wishes = [];
+                
+                snapshot.forEach((childSnapshot) => {
+                    const wish = childSnapshot.val();
+                    wish.id = childSnapshot.key;
+                    wishes.push(wish);
+                    
+                    totalWishes++;
+                    totalLikes += wish.likes || 0;
+                    
+                    const wishDate = new Date(wish.timestamp).toDateString();
+                    if (wishDate === today) {
+                        wishesToday++;
+                    }
+                });
+                
+                // Sort by timestamp (newest first)
+                wishes.sort((a, b) => b.timestamp - a.timestamp);
+                
+                // Display wishes
+                wishes.forEach((wish) => {
+                    const wishItem = document.createElement('div');
+                    wishItem.className = 'wish-item';
+                    wishItem.innerHTML = `
+                        <div class="wish-header">
+                            <div class="wish-name">${wish.name}</div>
+                            <div class="wish-time">${formatDate(wish.timestamp)}</div>
+                        </div>
+                        <div class="wish-message">${wish.message}</div>
+                        <button class="like-btn ${wish.likedBy && wish.likedBy.includes(getUserId()) ? 'liked' : ''}" 
+                                onclick="likeWish('${wish.id}')">
+                            <i class="fas fa-heart"></i> 
+                            <span class="like-count">${wish.likes || 0}</span>
+                        </button>
+                    `;
+                    wishesList.appendChild(wishItem);
+                });
+                
+                // Update stats
+                updateStats();
+            });
+        }
+
+        // Like a wish
+        function likeWish(wishId) {
+            const userId = getUserId();
+            const wishRef = wishesRef.child(wishId);
+            
+            wishRef.once('value').then((snapshot) => {
+                const wish = snapshot.val();
+                let likes = wish.likes || 0;
+                let likedBy = wish.likedBy || [];
+                
+                if (likedBy.includes(userId)) {
+                    // Unlike
+                    likes = Math.max(0, likes - 1);
+                    likedBy = likedBy.filter(id => id !== userId);
+                } else {
+                    // Like
+                    likes++;
+                    likedBy.push(userId);
+                    
+                    // Play like sound
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3');
+                    audio.volume = 0.2;
+                    audio.play();
+                }
+                
+                wishRef.update({
+                    likes: likes,
+                    likedBy: likedBy
+                });
+            });
+        }
+
+        // Generate a unique user ID
+        function getUserId() {
+            let userId = localStorage.getItem('birthdayUserId');
+            
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('birthdayUserId', userId);
+            }
+            
+            return userId;
+        }
+
+        // Update statistics
+        function updateStats() {
+            totalWishesEl.textContent = totalWishes;
+            totalLikesEl.textContent = totalLikes;
+            wishersTodayEl.textContent = wishesToday;
+            
+            // Calculate celebration level
+            let level = '🎂';
+            if (totalWishes > 20) level = '🎉';
+            if (totalWishes > 50) level = '🎊';
+            if (totalWishes > 100) level = '🥳';
+            if (totalWishes > 200) level = '🎇';
+            
+            celebrationLevelEl.textContent = level;
+            
+            // Update birthday meter
+            const meterValue = Math.min(100, Math.floor((totalWishes / 100) * 100));
+            birthdayMeter.style.width = meterValue + '%';
+            meterText.textContent = `Birthday excitement: ${meterValue}%`;
+            
+            // Save stats to Firebase
+            statsRef.set({
+                totalWishes: totalWishes,
+                totalLikes: totalLikes,
+                wishesToday: wishesToday,
+                lastUpdated: Date.now()
+            });
+        }
+
+        // Music player control
+        playBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                birthdaySong.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                birthdaySong.play();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Countdown timer - FIXED FOR Jaan'S BIRTHDAY
+        function updateCountdown() {
+            const birthday = new Date(BIRTHDAY_DATE).getTime();
+            const now = new Date().getTime();
+            
+            // Debug: Check dates in console
+            console.log("Jaan's Birthday:", new Date(BIRTHDAY_DATE));
+            console.log("Current Date:", new Date());
+            
+            // If birthday has passed, set for next year (2027)
+            let targetDate = new Date(BIRTHDAY_DATE);
+            if (targetDate.getTime() < now) {
+                targetDate.setFullYear(targetDate.getFullYear() + 1);
+            }
+            
+            const distance = targetDate.getTime() - now;
+            
+            // Calculate days, hours, minutes, seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Update display
+            daysEl.textContent = days.toString().padStart(2, '0');
+            hoursEl.textContent = hours.toString().padStart(2, '0');
+            minutesEl.textContent = minutes.toString().padStart(2, '0');
+            secondsEl.textContent = seconds.toString().padStart(2, '0');
+            
+            // Special messages
+            if (days === 0 && hours < 24) {
+                document.querySelector('.countdown-title').textContent = "It's Birthday Time! 🎉";
+                createConfetti();
+                
+                if (hours === 0 && minutes === 0 && seconds < 10) {
+                    document.querySelector('.countdown-title').textContent = "Happy Birthday Meri Jaan! 🥳";
+                    // More confetti for the final countdown
+                    if (seconds % 2 === 0) createConfetti();
+                }
+            } else if (days === 1) {
+                document.querySelector('.countdown-title').textContent = "Birthday is Tomorrow! 🎊";
+            } else if (days < 7) {
+                document.querySelector('.countdown-title').textContent = `${days} Days to Ammu's Birthday!`;
+            }
+        }
+
+        // Add memory function
+        function addMemory() {
+            const url = document.getElementById('memoryUrl').value.trim();
+            const caption = document.getElementById('memoryCaption').value.trim();
+            
+            if (!url || !caption) {
+                showToast('Please enter both URL and caption', 'error');
+                return;
+            }
+            
+            const memory = {
+                url: url,
+                caption: caption,
+                addedBy: document.getElementById('name').value || 'Anonymous',
+                timestamp: Date.now()
+            };
+            
+            memoriesRef.push(memory)
+                .then(() => {
+                    showToast('Memory added successfully!');
+                    document.getElementById('memoryUrl').value = '';
+                    document.getElementById('memoryCaption').value = '';
+                })
+                .catch((error) => {
+                    console.error('Error adding memory:', error);
+                    showToast('Error adding memory', 'error');
+                });
+        }
+
+        // Load memories
+        function loadMemories() {
+            memoriesRef.on('value', (snapshot) => {
+                const memoryGrid = document.getElementById('memoryGrid');
+                
+                // Keep the first 3 default memories if no memories exist
+                if (!snapshot.exists()) {
+                    return;
+                }
+                
+                memoryGrid.innerHTML = '';
+                
+                snapshot.forEach((childSnapshot) => {
+                    const memory = childSnapshot.val();
+                    
+                    const photoItem = document.createElement('div');
+                    photoItem.className = 'photo-item';
+                    photoItem.innerHTML = `
+                        <img src="${memory.url}" alt="${memory.caption}" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                        <div class="photo-caption">${memory.caption}</div>
+                    `;
+                    
+                    memoryGrid.appendChild(photoItem);
+                });
+            });
+        }
+
+        // Share page function
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: `Happy Birthday ${BIRTHDAY_NAME}!`,
+                    text: `Send birthday wishes to ${BIRTHDAY_NAME} on this interactive page! Birthday: 17 April 2026`,
+                    url: window.location.href,
+                })
+                .then(() => showToast('Thanks for sharing!'))
+                .catch((error) => console.log('Error sharing:', error));
+            } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Link copied to clipboard!');
+            }
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data
+            loadWishes();
+            loadMemories();
+            
+            // Start countdown
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // Create initial confetti
+            setTimeout(createConfetti, 1000);
+            
+            // Play birthday song automatically after 2 seconds
+            setTimeout(() => {
+                birthdaySong.play().catch(e => console.log("Auto-play prevented:", e));
+                isPlaying = true;
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }, 2000);
+            
+            // Check if today is the birthday (April 17)
+            const today = new Date();
+            const birthday = new Date(BIRTHDAY_DATE);
+            
+            // Check if same month and day (ignoring year)
+            if (today.getMonth() === birthday.getMonth() && today.getDate() === birthday.getDate()) {
+                document.querySelector('.header h2').textContent = "Today is ARSHIYA's Birthday! 🥳";
+                setInterval(createConfetti, 3000); // More confetti on birthday
+                
+                // Special birthday message
+                const specialMessage = document.createElement('div');
+                specialMessage.innerHTML = `<p style="color: white; font-size: 1.2rem; margin-top: 20px;">🎂 Wishing you the happiest birthday ever! 🎂</p>`;
+                document.querySelector('.header').appendChild(specialMessage);
+            } else if (today.getMonth() === 3 && today.getDate() === 16) { // April 16
+                document.querySelector('.header h2').textContent = "ARSHIYA's birthday is tomorrow! 🎊";
+            }
+            
+            // Load stats from Firebase
+            statsRef.on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const stats = snapshot.val();
+                    totalWishesEl.textContent = stats.totalWishes || 0;
+                    totalLikesEl.textContent = stats.totalLikes || 0;
+                    wishersTodayEl.textContent = stats.wishesToday || 0;
+                }
+            });
+        });
+
+        // Add some sample wishes on first load
+        function initializeSampleData() {
+            // Check if we need to add sample data
+            wishesRef.once('value').then((snapshot) => {
+                if (!snapshot.exists() || snapshot.numChildren() < 2) {
+                    // Add sample wishes for ARSHIYA
+                    const sampleWishes = [
+                        {
+                            name: "Best Friend",
+                            message: "Happy Birthday ARSHIYA! 🎉 May your 17 April 2026 be filled with joy, laughter, and wonderful surprises! You deserve the world!",
+                            timestamp: Date.now() - 3600000,
+                            likes: 8,
+                            likedBy: []
+                        },
+                        {
+                            name: "Well Wisher",
+                            message: "Wishing the amazing ARSHIYA a fantastic birthday! May all your dreams for 2026 come true! 🥳",
+                            timestamp: Date.now() - 7200000,
+                            likes: 5,
+                            likedBy: []
+                        },
+                        {
+                            name: "Secret Admirer",
+                            message: "To the star that shines the brightest - Happy Birthday ARSHIYA! 🌟 Can't wait to celebrate with you on 17th April!",
+                            timestamp: Date.now() - 10800000,
+                            likes: 12,
+                            likedBy: []
+                        }
+                    ];
+                    
+                    sampleWishes.forEach(wish => {
+                        wishesRef.push(wish);
+                    });
+                    
+                    // Add sample memories for ARSHIYA
+                    const sampleMemories = [
+                        {
+                            url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                            caption: "ARSHIYA's last birthday celebration!",
+                            addedBy: "Friend",
+                            timestamp: Date.now() - 86400000
+                        },
+                        {
+                            url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                            caption: "ARSHIYA enjoying life!",
+                            addedBy: "Family",
+                            timestamp: Date.now() - 172800000
+                        }
+                    ];
+                    
+                    sampleMemories.forEach(memory => {
+                        memoriesRef.push(memory);
+                    });
+                }
+            });
+        }
+
+        // Call initialization
+        initializeSampleData();
+        
+        // Auto-create confetti every 30 seconds
+        setInterval(() => {
+            // Only create confetti if it's close to birthday (within 7 days)
+            const birthday = new Date(BIRTHDAY_DATE).getTime();
+            const now = new Date().getTime();
+            const daysToBirthday = Math.floor((birthday - now) / (1000 * 60 * 60 * 24));
+            
+            if (daysToBirthday <= 7) {
+                createConfetti();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
