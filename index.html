@@ -512,7 +512,7 @@
         </div>
         <div class="song-title">Happy Birthday Song</div>
         <audio id="birthdaySong" loop>
-            <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3" type="audio/mpeg">
+            <source src="bithday.mp3" type="audio/mpeg">
         </audio>
     </div>
 
@@ -1106,11 +1106,11 @@
             setTimeout(createConfetti, 1000);
             
             // Play birthday song automatically after 2 seconds
-            setTimeout(() => {
-                birthdaySong.play().catch(e => console.log("Auto-play prevented:", e));
-                isPlaying = true;
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }, 2000);
+setTimeout(() => {
+    birthdaySong.play().catch(e => console.log("Music play error:", e));
+    isPlaying = true;
+    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+}, 3000);  // 3 seconds delay
             
             // Check if today is the birthday (April 17)
             const today = new Date();
