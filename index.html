@@ -1140,63 +1140,6 @@ setTimeout(() => {
             });
         });
 
-        // Add some sample wishes on first load
-        function initializeSampleData() {
-            // Check if we need to add sample data
-            wishesRef.once('value').then((snapshot) => {
-                if (!snapshot.exists() || snapshot.numChildren() < 2) {
-                    // Add sample wishes for ARSHIYA
-                    const sampleWishes = [
-                        {
-                            name: "Best Friend",
-                            message: "Happy Birthday ARSHIYA! 🎉 May your 17 April 2026 be filled with joy, laughter, and wonderful surprises! You deserve the world!",
-                            timestamp: Date.now() - 3600000,
-                            likes: 8,
-                            likedBy: []
-                        },
-                        {
-                            name: "Well Wisher",
-                            message: "Wishing the amazing ARSHIYA a fantastic birthday! May all your dreams for 2026 come true! 🥳",
-                            timestamp: Date.now() - 7200000,
-                            likes: 5,
-                            likedBy: []
-                        },
-                        {
-                            name: "Secret Admirer",
-                            message: "To the star that shines the brightest - Happy Birthday ARSHIYA! 🌟 Can't wait to celebrate with you on 17th April!",
-                            timestamp: Date.now() - 10800000,
-                            likes: 12,
-                            likedBy: []
-                        }
-                    ];
-                    
-                    sampleWishes.forEach(wish => {
-                        wishesRef.push(wish);
-                    });
-                    
-                    // Add sample memories for ARSHIYA
-                    const sampleMemories = [
-                        {
-                            url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                            caption: "ARSHIYA's last birthday celebration!",
-                            addedBy: "Friend",
-                            timestamp: Date.now() - 86400000
-                        },
-                        {
-                            url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                            caption: "ARSHIYA enjoying life!",
-                            addedBy: "Family",
-                            timestamp: Date.now() - 172800000
-                        }
-                    ];
-                    
-                    sampleMemories.forEach(memory => {
-                        memoriesRef.push(memory);
-                    });
-                }
-            });
-        }
-
         // Call initialization
         // initializeSampleData();
         
