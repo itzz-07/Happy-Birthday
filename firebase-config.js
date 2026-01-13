@@ -1,12 +1,13 @@
-// TERA FIREBASE CONFIGURATION YAHAN DALNI HAI
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    databaseURL: "YOUR_DATABASE_URL",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDkW9fa3i_fThReF87MZ8rTZnaAKniqy6A",
+  authDomain: "itzz-07.firebaseapp.com",
+  databaseURL: "https://itzz-07-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "itzz-07",
+  storageBucket: "itzz-07.firebasestorage.app",
+  messagingSenderId: "623116155839",
+  appId: "1:623116155839:web:76902794cffa088faa7f0a",
+  measurementId: "G-KZX2L48BE3"
 };
 
 // Initialize Firebase
